@@ -1,12 +1,11 @@
 #include <stdio.h> 
-#include <stdbool.h> 
 
 #include "guiman.c"
 
 int main() {
 
-    int cursor_value = 0;
-    int = key; 
+    int cursor_value;
+    int pos = 0; 
 
     // init ncurses 
     initscr();  
@@ -15,30 +14,36 @@ int main() {
     // turn off line buffering 
     cbreak(); 
     // do not display user input on screen 
-    noecho();  
+    //noecursor_valueo();
 
-    program_start();
+    while((cursor_value = getch()) != 'q') {
 
-    while (true) {
-
-        key = getch();
-
-        switch (key) {
+        switch(cursor_value) {
             case KEY_UP:
-                if (cursor_value > 0) cursor_value--;
-                break;
+                pos = 0;
+                              
+                display_menu(pos);
+                break; 
+
             case KEY_DOWN:
-                if (cursor_value < 1) cursor_value++;
+                pos = 1;
+             
+                display_menu(pos);
                 break;
-            case 27: // ESC key ascii value 
-                // kills ncurses
-                endwin();  
-                return 0;  
+
             default:
+
+                // user wants to add a new password 
+                if (pos == 0 || cursor_value == KEY_ENTER) {
+
+                    add_new_password_menu(); 
+
+                }
                 break;
         }
-
-        start_cursor_position(cursor_value);
-
     }
+
+    endwin();
+
+    return 0; 
 }
