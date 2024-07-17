@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <sqlite3.h>
+
+int main(int argc, char* argv[]) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    char *errMsg = 0;
+    int rc;
+
+    // Open the database connection
+    rc = sqlite3_open("test.db", &db);
+    if (rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return 0;
+    } else {
+        fprintf(stderr, "Opened database successfully\n");
+    }
+
+    // Create table
+    const char *sql = "CREATE TABLE IF NOT EXISTS COMPANY("
+                      "ID INT PRIMARY KEY NOT NULL,"
+                      "NAME TEXT NOT NULL,"
+                      "AGE INT NOT NULL,"
+                      "ADDRESS CHAR(50),"
+                      "SALARY REAL);";
+    rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+
+    // Insert data using variables
+    sql = "INSERT INTO COMPANY (ID, NAME, AGE, ADDRESS, SALARY) VALUES (?, ?, ?, ?, ?);";
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    int id = 2;
+    const char *name = "Allen";
+    int age = 25;
+    const char *address = "Texas";
+    double salary = 15000.0;
+
+    sqlite3_bind_int(stmt, 1, id);
+    sqlite3_bind_text(stmt, 2, name, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, age);
+    sqlite3_bind_text(stmt, 4, address, -1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 5, salary);
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        fprintf(stderr, "Execution failed: %s\n", sqlite3_errmsg(db));
+    } else {
+        fprintf(stdout, "Records created successfully\n");
+    }
+
+    sqlite3_finalize(stmt);
+
+    // Select data
+    sql = "SELECT * FROM COMPANY WHERE ID = ?;";
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        printf("ID = %d\n", sqlite3_column_int(stmt, 0));
+        printf("NAME = %s\n", sqlite3_column_text(stmt, 1));
+        printf("AGE = %d\n", sqlite3_column_int(stmt, 2));
+        printf("ADDRESS = %s\n", sqlite3_column_text(stmt, 3));
+        printf("SALARY = %f\n", sqlite3_column_double(stmt, 4));
+    }
+
+    if (rc != SQLITE_DONE) {
+        fprintf(stderr, "Execution failed: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_finalize(stmt);
+
+    // Close the database connection
+    sqlite3_close(db);
+
+    return 0;
+}
+

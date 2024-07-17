@@ -1,1 +1,2 @@
-gcc -o password_manager client.o -lncurses
+gcc -o password_manager client.c -lncurses -l sqlite3
+

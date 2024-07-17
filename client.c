@@ -1,11 +1,16 @@
-#include <stdio.h> 
-
 #include "guiman.c"
+#include "dbmanager.c"
 
 int main() {
 
+    // main menu vars 
     int cursor_value;
     int pos = 0; 
+
+    // add new password vars 
+    char account_name[100]; 
+    char account_email[100]; 
+    char account_password[100]; 
 
     // init ncurses 
     initscr();  
@@ -15,6 +20,8 @@ int main() {
     cbreak(); 
     // do not display user input on screen 
     //noecursor_valueo();
+
+    display_menu(0); 
 
     while((cursor_value = getch()) != 'q') {
 
@@ -35,8 +42,17 @@ int main() {
 
                 // user wants to add a new password 
                 if (pos == 0 || cursor_value == KEY_ENTER) {
+                    clear_screen(); 
+                    add_new_password_menu(0); 
+                    getstr(account_name); 
 
-                    add_new_password_menu(); 
+                    add_new_password_menu(1); 
+                    getstr(account_email); 
+
+                    add_new_password_menu(2); 
+                    getstr(account_password); 
+
+                    new_db_entry(account_name, account_email, account_password); 
 
                 }
                 break;
