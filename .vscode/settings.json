@@ -2,6 +2,8 @@
     "files.associations": {
         "ncurses.h": "c",
         "stdio.h": "c",
-        "sqlite3.h": "c"
+        "sqlite3.h": "c",
+        "TST2FISH.C": "cpp",
+        "TWOFISH2.C": "cpp"
     }
 }

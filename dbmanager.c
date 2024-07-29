@@ -3,14 +3,13 @@
 #include <stdio.h> 
 
 // for reference: https://zetcode.com/db/sqlitec/
-
-int new_db_entry(char name[100], char email[100], char password[100]) {
+int new_db_entry(char name[100], char email[100], char encrypted_password[100]) {
 
     sqlite3 *db; 
     char *err_msg = 0; 
     sqlite3_stmt *stmt;
     
-    int base = sqlite3_open("userdata", &db); 
+    int base = sqlite3_open("db/userdata", &db); 
 
     if (base != SQLITE_OK) {
 
@@ -45,10 +44,12 @@ int new_db_entry(char name[100], char email[100], char password[100]) {
         return 0;
     }
 
-    int generated_id = "SELECT COUNT(non-NULL constant value) FROM table";  
+    // place holder 
+    int generated_id = 1;
+
     const char *recv_name = name; 
     const char *recv_email = email; 
-    const char *recv_password = password; 
+    const char *recv_password = encrypted_password; 
 
     sqlite3_bind_int(stmt, 1, generated_id); 
     sqlite3_bind_text(stmt, 2, recv_name, -1, SQLITE_STATIC);
@@ -73,12 +74,7 @@ int new_db_entry(char name[100], char email[100], char password[100]) {
 
     sqlite3_bind_int(stmt, 1, generated_id); 
 
-    while ((base = sqlite3_step(stmt)) == SQLITE_ROW) {
-        printf("ID = %d\n", sqlite3_column_int(stmt, 0));
-        printf("NAME = %s\n", sqlite3_column_text(stmt, 1));
-        printf("EMAIL = %d\n", sqlite3_column_int(stmt, 2));
-        printf("PASSWORD = %s\n", sqlite3_column_text(stmt, 3));
-    }
+    while ((base = sqlite3_step(stmt)) == SQLITE_ROW) {}
 
     if (base != SQLITE_DONE) {
         fprintf(stderr, "FAILED TO EXECUTE: %s", sqlite3_errmsg(db)); 
@@ -90,3 +86,4 @@ int new_db_entry(char name[100], char email[100], char password[100]) {
 
     return 0; 
 }
+
