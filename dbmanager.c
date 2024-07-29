@@ -86,4 +86,3 @@ int new_db_entry(char name[100], char email[100], char encrypted_password[100]) 
 
     return 0; 
 }
-

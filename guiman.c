@@ -64,3 +64,9 @@ void add_new_password_menu(int step) {
     return; 
 
 }
+
+void view_current_data() {
+
+    printw("Coming Soon"); 
+
+}

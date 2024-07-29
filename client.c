@@ -56,6 +56,12 @@ int main() {
                     new_db_entry(account_name, account_email, account_password); 
 
                 }
+
+                if (pos == 1 || cursor_value == KEY_ENTER) {
+                    clear_screen();  
+                    view_current_data(); 
+                }
+
                 break;
         }
     }
