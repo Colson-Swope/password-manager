@@ -44,7 +44,8 @@ int new_db_entry(char name[100], char email[100], char encrypted_password[100]) 
         return 0;
     }
 
-    // place holder 
+    // calculate primary key ID 
+
     int generated_id = 1;
 
     const char *recv_name = name; 

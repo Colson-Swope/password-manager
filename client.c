@@ -6,7 +6,7 @@ int main() {
 
     // main menu vars 
     int cursor_value;
-    int pos = 0; 
+    int pos = 3; 
 
     // add new password vars 
     char account_name[100]; 
@@ -18,12 +18,10 @@ int main() {
     // enable keypad mode for arrow key reading 
     keypad(stdscr, TRUE); 
     // turn off line buffering 
-    cbreak(); 
-    // do not display user input on screen 
-    //noecursor_valueo();
+    cbreak();   
 
     display_menu(0); 
-
+     
     while((cursor_value = getch()) != 'q') {
 
         switch(cursor_value) {
